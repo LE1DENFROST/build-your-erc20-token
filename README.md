@@ -29,7 +29,6 @@ In our project, there will be two main smart contracts:
 • RohanDex.sol: A DEX where you can trade the token with ETH. <br> <br>
 Create the file contracts/RohanToken.sol and add the following code:
 ```RohanToken.sol
-mkdir rohan-token
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
@@ -186,6 +185,215 @@ Explanation <br><br>
 • Adds your Etherscan verification API key for contract verification. <br>
 • Replace YOUR_INFURA_API_KEY with your actual Infura API key and YOUR_WALLET_PRIVATE_KEY with your wallet's private key (be cautious with your private key). Also, insert your Etherscan <br> 
 • API key in the corresponding field. <br><br>
+
+Deploying Contracts <br> <br>
+The deploy.js script will be used to deploy the smart contracts to the Sepolia test network. Create the file scripts/deploy.js and add the following code:
+```deploy.js
+
+// scripts/deploy.js
+async function main() {
+    const [deployer] = await ethers.getSigners();
+    console.log("Deploying contracts with the account:", deployer.address);
+
+    const RohanToken = await ethers.getContractFactory("RohanToken");
+    const RohanDex = await ethers.getContractFactory("RohanDex");
+
+    // Token deploy
+    const token = await RohanToken.deploy(deployer.address, { gasPrice, gasLimit });
+    await token.deployed();
+    console.log("Rohan Token deployed to:", token.address);
+
+    // Dex deploy
+    const rohanTokenAddress = token.address;
+    const rohanDex = await RohanDex.deploy(rohanTokenAddress, { gasPrice, gasLimit });
+    await rohanDex.deployed();
+    console.log("Rohan Dex deployed to:", rohanDex.address);
+
+     // define tokenAmount here
+    const tokenAmount = ethers.utils.parseEther("1000000"); // 1 million tokens
+
+    // Token confirmation
+    const approvalTx = await token.approve(rohanDex.address, tokenAmount);
+    await approvalTx.wait();
+    console.log("token approval granted");
+
+    // Adding liquidity
+    try {
+        const tx = await rohanDex.addLiquidity(tokenAmount, { 
+            value: ethers.utils.parseEther("0.001"), // 0.001 ETH
+            gasPrice, 
+            gasLimit 
+        });
+        await tx.wait();
+        console.log("Liquidity added");
+    } catch (error) {
+        console.error("error:", error);
+    }
+
+    // Token balance check
+    const balance = await token.balanceOf(deployer.address);
+    console.log("Token balancei:", ethers.utils.formatEther(balance));
+
+    // ETH balance check
+    const ethBalance = await deployer.getBalance();
+    console.log("ETH balance:", ethers.utils.formatEther(ethBalance));
+}
+
+const gasPrice = ethers.utils.parseUnits('3', 'gwei');// An even lower gas price
+const gasLimit = 2500000; // 2.5 million gas
+
+main()
+    .then(() => process.exit(0))
+    .catch((error) => {
+        console.error(error);
+        process.exit(1);
+    });
+```
+This script distributes RohanToken and RohanDex contracts, issues token confirmation and adds liquidity to the DEX. <br>
+```bash
+npx hardhat run scripts/deploy.js --network sepolia
+```
+Once the deployment is complete, you will see the addresses of the deployed contracts in the console output. <br><br>
+Verifying Contracts <br><br>
+Verifying the deployed contracts on Etherscan makes the source code transparent and ensures trustworthiness. Create the file scripts/verify.js and add the following code: <br>
+```verify.js
+const hre = require("hardhat");
+
+async function main() {
+  const contractAddress = "your token address";
+  const initialOwnerAddress = "the address you used to deploy the token"; 
+
+  const contractArguments = [initialOwnerAddress];
+
+  console.log("The RohanToken contract is being ratified.");
+  
+  try {
+    await hre.run("verify:verify", {
+      address: contractAddress,
+      constructorArguments: contractArguments,
+    });
+    console.log("RohanToken contract successfully approved!");
+  } catch (error) {
+    console.error("Error during confirmation:", error);
+  }
+}
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+```
+To start the verification process, run the following command in your terminal: <br>
+```bash
+npx hardhat run scripts/verify.js --network sepolia
+```
+When the verification is successful, you will be able to view your contracts on Etherscan. <br><br>
+
+Interacting with the DEX <br><br>
+Create the file scripts/liqide.js and add the following code:
+```liqide.js
+const { Web3 } = require('web3');
+const web3 = new Web3('https://sepolia.infura.io/v3/-your-infura-api');
+
+const dexABI = [
+    ]; // ABI of the DEX contract. You can find it in the artifacts folder.
+const dexAddress = 'token dex address';
+const dexContract = new web3.eth.Contract(dexABI, dexAddress);
+
+const tokenABI = [
+    ]; // ABI of the token contract. You can find it in the artifacts folder.
+const tokenAddress = 'token contract address'; // Address of the token contract
+const tokenContract = new web3.eth.Contract(tokenABI, tokenAddress);
+
+async function checkLiquidity() {
+    const reserveEth = await dexContract.methods.reserveEth().call();
+    const reserveToken = await dexContract.methods.reserveToken().call();
+    console.log('Mevcut likidite:', {
+        ETH: web3.utils.fromWei(reserveEth, 'ether'),
+        Token: web3.utils.fromWei(reserveToken, 'ether')
+    });
+    return { reserveEth, reserveToken };
+}
+
+
+async function addLiquidity(privateKey, ethAmount, tokenAmount) {
+    const account = web3.eth.accounts.privateKeyToAccount(privateKey);
+    web3.eth.accounts.wallet.add(account);
+    web3.eth.defaultAccount = account.address;
+
+    try {
+        console.log('Existing liquidity is being controlled...');
+        const { reserveEth, reserveToken } = await checkLiquidity();
+
+        if (reserveEth !== '0' && reserveToken !== '0') {
+             // Calculate token amount based on available liquidity
+            const requiredTokenAmount = BigInt(ethAmount) * BigInt(reserveToken) / BigInt(reserveEth);
+            tokenAmount = requiredTokenAmount.toString();
+            console.log('Required amount of tokens:', web3.utils.fromWei(tokenAmount, 'ether'));
+        }
+
+        console.log('Token approval is being given...');
+        const approvalTx = await tokenContract.methods.approve(dexAddress, tokenAmount).send({ from: account.address });
+        console.log('Token approval granted. Transaction hash:', approvalTx.transactionHash);
+
+        console.log('Initiating the process of adding liquidity...');
+        const gasPrice = await web3.eth.getGasPrice();
+        const gasEstimate = await dexContract.methods.addLiquidity(tokenAmount).estimateGas({
+            from: account.address,
+            value: ethAmount
+        });
+
+        console.log('Estimated gas:', gasEstimate);
+
+        const tx = {
+            from: account.address,
+            to: dexAddress,
+            gas: Math.floor(Number(gasEstimate) * 1.5),
+            gasPrice: gasPrice,
+            value: ethAmount,
+            data: dexContract.methods.addLiquidity(tokenAmount).encodeABI()
+        };
+
+        console.log('The transaction is being signed...');
+        const signedTx = await web3.eth.accounts.signTransaction(tx, privateKey);
+        console.log('Sending the transaction...');
+        const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+        
+        console.log('The process is successful:', receipt.transactionHash);
+        console.log('Gas use:', receipt.gasUsed);
+        console.log('Transaction status:', receipt.status ? 'Successful' : 'Failed');
+
+        console.log('Updated liquidity is being checked...');
+        await checkLiquidity();
+    } catch (error) {
+        console.error('Hata detayı:', error);
+        if (error.receipt) {
+            console.error('Transaction hash', error.receipt.transactionHash);
+            console.error('Gas use:', error.receipt.gasUsed);
+            console.error('Transaction status:', error.receipt.status ? 'Successful' : 'Failed');
+        }
+    }
+}
+
+// Usage
+const privateKey = 'privatekey of metamask wallet';
+const ethToAdd = web3.utils.toWei('0.15', 'ether');
+let tokenToAdd = web3.utils.toWei('10', 'ether'); // This value will be automatically adjusted according to available liquidity
+
+addLiquidity(privateKey, ethToAdd, tokenToAdd)
+    .then(() => console.log('Transaction completed'))
+    .catch((error) => console.error('General error:', error));
+```
+Adding and Checking Liquidity <br><br>
+This script allows you to check the current liquidity of the DEX and add specified amounts of ETH and tokens. The privateKey is used to add liquidity to the DEX. Never share your private key in real projects, and keep it secure. <br><br>
+Conclusion <br><br>
+In this guide, you learned how to create an ERC20 token using Solidity and OpenZeppelin, develop a DEX to manage that token, and deploy these contracts using Hardhat. You also covered the steps for verifying contracts on Etherscan and interacting with the DEX. <br>
+
+With this knowledge, you can start developing your own crypto projects.<br>
+
+Remember, smart contracts are permanent, and mistakes can lead to significant losses. Therefore, it is crucial to conduct thorough testing and consider security audits before deploying your contracts.
 
 
 
