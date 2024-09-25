@@ -12,7 +12,7 @@ Before starting the project, make sure you have the following tools and informat
 • Infura or Alchemy API Key: To interact with the Ethereum network. <br>
 • Etherscan API KEY <br> <br>
 
-Project Setup <br> <br>
+📌 𝙋𝙧𝙤𝙟𝙚𝙘𝙩 𝙎𝙚𝙩𝙪𝙥 <br> <br>
 The first step is to create your project directory and install the necessary packages.
 ```bash
 mkdir rohan-token
@@ -21,15 +21,15 @@ npm init -y
 npm install --save-dev hardhat @nomiclabs/hardhat-ethers @nomiclabs/hardhat-etherscan ethers
 npm install @openzeppelin/contracts
 ```  
-Starting the Hardhat Project <br><br>
+📌 𝐒𝐭𝐚𝐫𝐭𝐢𝐧𝐠 𝐭𝐡𝐞 𝐇𝐚𝐫𝐝𝐡𝐚𝐭 𝐏𝐫𝐨𝐣𝐞𝐜𝐭 <br><br>
 Run the following command to start the Hardhat project. This command will help you create the Hardhat configuration files.
 `npx hardhat`
 After running the command, you will be presented with several options to set up the project. You can select “Create a basic sample project”. <br> <br>
-Build Hardhat Project <br> <br>
+📌 𝐁𝐮𝐢𝐥𝐝 𝐇𝐚𝐫𝐝𝐡𝐚𝐭 𝐏𝐫𝐨𝐣𝐞𝐜𝐭 <br> <br>
 After writing your smart contracts, use the command below to compile your project. This step compiles the smart contracts you have written and checks for errors.
 `npx hardhat compile`
 
-Writing Smart Contracts <br> <br>
+📌 𝐖𝐫𝐢𝐭𝐢𝐧𝐠 𝐒𝐦𝐚𝐫𝐭 𝐂𝐨𝐧𝐭𝐫𝐚𝐜𝐭𝐬 <br> <br>
 In our project, there will be two main smart contracts:
 
 • RohanToken.sol: The ERC20 token contract. <br>
@@ -165,7 +165,7 @@ contract RohanDex {
 ```  
 This contract provides basic DEX functionality. Users can trade tokens for ETH, and they can add or remove liquidity. You can further develop the liquidity functions based on your project needs. <br><br>
 
-Hardhat Configuration <br><br>
+📌 𝐇𝐚𝐫𝐝𝐡𝐚𝐭 𝐂𝐨𝐧𝐟𝐢𝐠𝐮𝐫𝐚𝐭𝐢𝐨𝐧 <br><br>
 Hardhat is a powerful development environment for compiling, testing, and deploying Ethereum smart contracts. Create the file hardhat.config.js and add the following code:
  ```hardhat.config.js
 // ./hardhat.config.js
@@ -193,7 +193,7 @@ Explanation <br><br>
 • Replace YOUR_INFURA_API_KEY with your actual Infura API key and YOUR_WALLET_PRIVATE_KEY with your wallet's private key (be cautious with your private key). Also, insert your Etherscan <br> 
 • API key in the corresponding field. <br><br>
 
-Deploying Contracts <br> <br>
+📌 𝐃𝐞𝐩𝐥𝐨𝐲𝐢𝐧𝐠 𝐂𝐨𝐧𝐭𝐫𝐚𝐜𝐭𝐬 <br> <br>
 The deploy.js script will be used to deploy the smart contracts to the Sepolia test network. Create the file scripts/deploy.js and add the following code:
 ```deploy.js
 
@@ -261,7 +261,7 @@ This script distributes RohanToken and RohanDex contracts, issues token confirma
 npx hardhat run scripts/deploy.js --network sepolia
 ```
 Once the deployment is complete, you will see the addresses of the deployed contracts in the console output. <br><br>
-Verifying Contracts <br><br>
+📌 𝐕𝐞𝐫𝐢𝐟𝐲𝐢𝐧𝐠 𝐂𝐨𝐧𝐭𝐫𝐚𝐜𝐭𝐬 <br><br>
 Verifying the deployed contracts on Etherscan makes the source code transparent and ensures trustworthiness. Create the file scripts/verify.js and add the following code: <br>
 ```verify.js
 const hre = require("hardhat");
@@ -298,7 +298,7 @@ npx hardhat run scripts/verify.js --network sepolia
 ```
 When the verification is successful, you will be able to view your contracts on Etherscan. <br><br>
 
-Interacting with the DEX <br><br>
+📌 𝐈𝐧𝐭𝐞𝐫𝐚𝐜𝐭𝐢𝐧𝐠 𝐰𝐢𝐭𝐡 𝐭𝐡𝐞 𝐃𝐄𝐗 <br><br>
 Create the file scripts/liqide.js and add the following code:
 ```liqide.js
 const { Web3 } = require('web3');
@@ -393,14 +393,15 @@ addLiquidity(privateKey, ethToAdd, tokenToAdd)
     .then(() => console.log('Transaction completed'))
     .catch((error) => console.error('General error:', error));
 ```
-Adding and Checking Liquidity <br><br>
-This script allows you to check the current liquidity of the DEX and add specified amounts of ETH and tokens. The privateKey is used to add liquidity to the DEX. Never share your private key in real projects, and keep it secure. <br><br>
-Conclusion <br><br>
-In this guide, you learned how to create an ERC20 token using Solidity and OpenZeppelin, develop a DEX to manage that token, and deploy these contracts using Hardhat. You also covered the steps for verifying contracts on Etherscan and interacting with the DEX. <br>
+📌𝐀𝐝𝐝𝐢𝐧𝐠 𝐚𝐧𝐝 𝐂𝐡𝐞𝐜𝐤𝐢𝐧𝐠 𝐋𝐢𝐪𝐮𝐢𝐝𝐢𝐭𝐲 <br><br>
+This script allows you to easily check the current liquidity of your DEX and add specific amounts of ETH and tokens. When adding liquidity, make sure to use your private key. Just a friendly reminder: never share your private key in real projects, and always keep it secure! <br><br>
 
-With this knowledge, you can start developing your own crypto projects.<br>
+📌 𝐂𝐨𝐧𝐜𝐥𝐮𝐬𝐢𝐨𝐧  <br><br>
+In this guide, you’ve learned how to create your very own ERC20 token using Solidity and OpenZeppelin. You’ve also developed a decentralized exchange (DEX) to manage that token and deployed everything using Hardhat. Along the way, you covered how to verify your contracts on Etherscan and interact with your DEX. <br>
 
-Remember, smart contracts are permanent, and mistakes can lead to significant losses. Therefore, it is crucial to conduct thorough testing and consider security audits before deploying your contracts.
+With this knowledge, you’re well on your way to starting your own crypto projects! <br>
+
+Just a final note: remember that smart contracts are permanent. Any mistakes can lead to significant losses, so it’s crucial to conduct thorough testing and consider getting security audits before you deploy your contracts.
 
 
 
