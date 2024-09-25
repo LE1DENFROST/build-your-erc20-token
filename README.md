@@ -4,10 +4,10 @@ Creating your own token in the world of crypto is an excellent step towards deve
 Requirements
 Before starting the project, make sure you have the following tools and information:
 
-• Node.js and npm: JavaScript runtime and package manager.
-• Hardhat: Ethereum development environment.
-• Git: Version control system.
-• Text Editor: Such as VSCode or similar.
-• Ethereum Wallet: MetaMask or similar.
-• Infura or Alchemy API Key: To interact with the Ethereum network.
-• Etherscan API KEY
+• Node.js and npm: JavaScript runtime and package manager. <br>
+• Hardhat: Ethereum development environment. <br>
+• Git: Version control system. <br>
+• Text Editor: Such as VSCode or similar. <br>
+• Ethereum Wallet: MetaMask or similar. <br>
+• Infura or Alchemy API Key: To interact with the Ethereum network. <br>
+• Etherscan API KEY <br>
