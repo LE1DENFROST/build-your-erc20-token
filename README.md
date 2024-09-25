@@ -1,7 +1,7 @@
-Introduction
-Creating your own token in the world of crypto is an excellent step towards developing decentralized finance (DeFi) applications or simply learning more about blockchain technology. In this guide, you’ll learn how to create an ERC20-compliant token, build a DEX to manage it, and deploy these smart contracts using Hardhat.
+Introduction <br>
+Creating your own token in the world of crypto is an excellent step towards developing decentralized finance (DeFi) applications or simply learning more about blockchain technology. <br> In this guide, you’ll learn how to create an ERC20-compliant token, build a DEX to manage it, and deploy these smart contracts using Hardhat.
 
-Requirements
+Requirements <br>
 Before starting the project, make sure you have the following tools and information:
 
 • Node.js and npm: JavaScript runtime and package manager. <br>
