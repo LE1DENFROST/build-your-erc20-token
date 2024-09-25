@@ -10,4 +10,16 @@ Before starting the project, make sure you have the following tools and informat
 • Text Editor: Such as VSCode or similar. <br>
 • Ethereum Wallet: MetaMask or similar. <br>
 • Infura or Alchemy API Key: To interact with the Ethereum network. <br>
-• Etherscan API KEY <br>
+• Etherscan API KEY <br> <br>
+
+Project Setup <br> <br>
+The first step is to create your project directory and install the necessary packages.
+```bash
+mkdir rohan-token
+cd rohan-token
+npm init -y
+npm install --save-dev hardhat @nomiclabs/hardhat-ethers @nomiclabs/hardhat-etherscan ethers
+npm install @openzeppelin/contracts
+```  
+
+
