@@ -28,11 +28,11 @@ contract RohanDex {
         uint256 tokensOut = getAmountOut(msg.value, reserveEth, reserveToken);
         require(tokensOut >= minTokens, "Insufficient output amount");
 
-        // Likiditeyi güncelle
+        // Update liquidity
         reserveEth += msg.value;
         reserveToken -= tokensOut;
 
-        // Tokenleri kullaniciya gönder
+        // Send tokens to the user
         token.safeTransfer(msg.sender, tokensOut);
 
         emit Swapped(msg.sender, msg.value, tokensOut);
