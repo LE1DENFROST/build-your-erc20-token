@@ -1,21 +1,21 @@
 const hre = require("hardhat");
 
 async function main() {
-  const contractAddress = "0x253bC3bfBd5A97d39D32745c553dB2FD3b3C5f3f"; // RohanToken'ın adresi
-  const initialOwnerAddress = "0x612fc22E91176D019b79CF116CF6D3ea908Efd41"; // RohanToken'ı deploy ederken kullandığınız adres
+  const contractAddress = "your token address";
+  const initialOwnerAddress = "the address you used to deploy the token"; 
 
   const contractArguments = [initialOwnerAddress];
 
-  console.log("RohanToken sözleşmesi onaylanıyor...");
+  console.log("The RohanToken contract is being ratified.");
   
   try {
     await hre.run("verify:verify", {
       address: contractAddress,
       constructorArguments: contractArguments,
     });
-    console.log("RohanToken sözleşmesi başarıyla onaylandı!");
+    console.log("RohanToken contract successfully approved!");
   } catch (error) {
-    console.error("Onaylama sırasında hata oluştu:", error);
+    console.error("Error during confirmation:", error);
   }
 }
 
