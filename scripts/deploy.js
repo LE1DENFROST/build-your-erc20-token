@@ -17,15 +17,15 @@ async function main() {
     await rohanDex.deployed();
     console.log("Rohan Dex deployed to:", rohanDex.address);
 
-    // tokenAmount'u burada tanımlayın
-    const tokenAmount = ethers.utils.parseEther("1000000"); // 1 milyon token
+     // define tokenAmount here
+    const tokenAmount = ethers.utils.parseEther("1000000"); // 1 million tokens
 
-    // Token onayı
+    // Token confirmation
     const approvalTx = await token.approve(rohanDex.address, tokenAmount);
     await approvalTx.wait();
-    console.log("Token onayı verildi");
+    console.log("token approval granted");
 
-    // Likidite ekleme
+    // Adding liquidity
     try {
         const tx = await rohanDex.addLiquidity(tokenAmount, { 
             value: ethers.utils.parseEther("0.001"), // 0.001 ETH
@@ -33,22 +33,22 @@ async function main() {
             gasLimit 
         });
         await tx.wait();
-        console.log("Likidite eklendi");
+        console.log("Liquidity added");
     } catch (error) {
-        console.error("Hata:", error);
+        console.error("error:", error);
     }
 
-    // Token bakiyesi kontrolü
+    // Token balance check
     const balance = await token.balanceOf(deployer.address);
-    console.log("Token bakiyesi:", ethers.utils.formatEther(balance));
+    console.log("Token balancei:", ethers.utils.formatEther(balance));
 
-    // ETH bakiyesi kontrolü
+    // ETH balance check
     const ethBalance = await deployer.getBalance();
-    console.log("ETH bakiyesi:", ethers.utils.formatEther(ethBalance));
+    console.log("ETH balance:", ethers.utils.formatEther(ethBalance));
 }
 
-const gasPrice = ethers.utils.parseUnits('3', 'gwei'); // Daha da düşük bir gaz fiyatı
-const gasLimit = 2500000; // 2.5 milyon gaz
+const gasPrice = ethers.utils.parseUnits('3', 'gwei');// An even lower gas price
+const gasLimit = 2500000; // 2.5 million gas
 
 main()
     .then(() => process.exit(0))
