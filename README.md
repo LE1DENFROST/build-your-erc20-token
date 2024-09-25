@@ -21,6 +21,13 @@ npm init -y
 npm install --save-dev hardhat @nomiclabs/hardhat-ethers @nomiclabs/hardhat-etherscan ethers
 npm install @openzeppelin/contracts
 ```  
+Starting the Hardhat Project <br><br>
+Run the following command to start the Hardhat project. This command will help you create the Hardhat configuration files.
+`npx hardhat`
+After running the command, you will be presented with several options to set up the project. You can select “Create a basic sample project”. <br> <br>
+Build Hardhat Project <br> <br>
+After writing your smart contracts, use the command below to compile your project. This step compiles the smart contracts you have written and checks for errors.
+`npx hardhat compile`
 
 Writing Smart Contracts <br> <br>
 In our project, there will be two main smart contracts:
